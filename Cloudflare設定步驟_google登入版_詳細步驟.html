@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Cloudflare 設定步驟(Google 登入版)— 新手詳細步驟</title>
+<style>
+:root{color-scheme:light dark;--bg:#F6F8F6;--card:#fff;--fg:#18231E;--mut:#5A6A61;--line:#D8E0DA;--ac:#1F6B52;--acs:#DCEEE5;--warn:#8F5A00;--warns:#FBF1DA;--code:#EEF2EF}
+@media(prefers-color-scheme:dark){:root{--bg:#101613;--card:#18201C;--fg:#E7EEEA;--mut:#9DB0A5;--line:#2B3832;--ac:#5CC09A;--acs:#1E3A2F;--warn:#E8B75A;--warns:#2E2614;--code:#202B25}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr);max-width:1240px;margin:0 auto}
+nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:20px 12px 40px 16px;border-right:1px solid var(--line);font-size:14px}
+nav.side .brand{font-weight:700;margin:0 8px 12px;line-height:1.4}
+nav.side a{display:block;padding:5px 10px;border-radius:8px;color:var(--fg);text-decoration:none;line-height:1.45}
+nav.side a:hover{background:var(--acs)}
+nav.side a.t1{margin-top:14px;font-size:12px;letter-spacing:.04em;color:var(--mut);font-weight:700}
+nav.side a.t2{font-weight:600}nav.side a.t3{padding-left:24px;color:var(--mut);font-size:13px}
+nav.side a.on{background:var(--acs);color:var(--ac);font-weight:700}
+main{padding:28px clamp(16px,4vw,48px) 96px;min-width:0}
+article{max-width:820px}
+h1,h2,h3,h4{line-height:1.35;scroll-margin-top:16px}
+h1{font-size:28px;margin:8px 0 12px}h2{font-size:23px;margin:44px 0 12px;padding-top:20px;border-top:1px solid var(--line)}h3{font-size:18px;margin:28px 0 8px}h4{font-size:16px}
+article>h1:not(:first-of-type){font-size:20px;color:var(--ac);border-top:0;margin-top:44px}
+p,li{margin:.55em 0}ul,ol{padding-left:1.5em}
+a{color:var(--ac)}hr{display:none}
+code{background:var(--code);padding:.1em .4em;border-radius:5px;font:.9em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-word}
+pre{position:relative;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;line-height:1.55}
+pre code{background:none;padding:0;word-break:normal}
+pre .cp{position:absolute;top:8px;right:8px;font:12px system-ui;padding:3px 10px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+blockquote{margin:14px 0;padding:10px 16px;background:var(--warns);border-left:4px solid var(--warn);border-radius:0 10px 10px 0}blockquote p{margin:.35em 0}
+.tw{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.6}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{background:var(--acs);white-space:nowrap}tr:last-child td{border-bottom:0}td:first-child{min-width:7em}
+p.ok{background:var(--acs);border-radius:10px;padding:9px 14px}
+li input[type=checkbox]{width:1.1em;height:1.1em;margin-right:.5em;vertical-align:-.15em;accent-color:var(--ac)}
+li:has(>input[type=checkbox]){list-style:none;margin-left:-1.3em}
+details.mtoc{display:none}
+.top{position:fixed;right:18px;bottom:18px;background:var(--ac);color:#fff;border-radius:999px;padding:9px 14px;font-size:13px;text-decoration:none;box-shadow:0 2px 10px #0003}
+@media(max-width:980px){.layout{display:block}nav.side{display:none}details.mtoc{display:block;position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:8px 16px}
+details.mtoc summary{cursor:pointer;font-weight:700;padding:6px 0}details.mtoc nav{max-height:60vh;overflow:auto;padding-bottom:8px}details.mtoc a{display:block;padding:7px 8px;color:var(--fg);text-decoration:none;border-radius:8px}details.mtoc a.t1{font-size:12px;color:var(--mut);font-weight:700;margin-top:8px}details.mtoc a.t3{padding-left:22px;color:var(--mut);font-size:14px}}
+@media print{nav.side,details.mtoc,.top,pre .cp{display:none}.layout{display:block}}
+</style></head><body>
+<details class="mtoc"><summary>目錄(點一下就跳到該節)</summary><nav><a class="t2" href="#h3" data-id="h3">快速總覽:七個步驟一頁看完</a>
+<a class="t2" href="#h4" data-id="h4">名詞小辭典(看不懂的字先查這裡)</a>
+<a class="t2" href="#h5" data-id="h5">0. 先搞懂:這套東西由哪三塊組成</a>
+<a class="t2" href="#h9" data-id="h9">1. 開始前:要準備什麼、記事表</a>
+<a class="t1" href="#h14" data-id="h14">第一次建置:步驟 1~7</a>
+<a class="t2" href="#h15" data-id="h15">步驟 1:建立資料庫(D1)</a>
+<a class="t2" href="#h16" data-id="h16">步驟 2:建立 Worker 並貼上程式</a>
+<a class="t2" href="#h17" data-id="h17">步驟 3:把資料庫綁到 Worker</a>
+<a class="t2" href="#h18" data-id="h18">步驟 4:不要開通 Zero Trust / Access(重要的轉折)</a>
+<a class="t2" href="#h19" data-id="h19">步驟 5:在 Google 建立登入用的 OAuth 用戶端</a>
+<a class="t3" href="#h20" data-id="h20">5-1 進入 Google Cloud 並建立專案</a>
+<a class="t3" href="#h21" data-id="h21">5-2 找到「OAuth 同意畫面」(Google Auth Platform)</a>
+<a class="t3" href="#h22" data-id="h22">5-3 完成 OAuth 設定</a>
+<a class="t3" href="#h23" data-id="h23">5-4 建立 OAuth 用戶端</a>
+<a class="t3" href="#h24" data-id="h24">5-5 加入測試使用者</a>
+<a class="t2" href="#h25" data-id="h25">步驟 6:在 Worker 設定變數並 Deploy</a>
+<a class="t2" href="#h26" data-id="h26">步驟 7:測試</a>
+<a class="t2" href="#h27" data-id="h27">3. 日常管理</a>
+<a class="t2" href="#h30" data-id="h30">4. 之後網頁或資料變了,要怎麼更新</a>
+<a class="t3" href="#h31" data-id="h31">4-A 只是在網頁上改內容(最常見)</a>
+<a class="t3" href="#h32" data-id="h32">4-B 網頁(功能、外觀)有變,資料不動</a>
+<a class="t3" href="#h33" data-id="h33">4-C 網頁和資料都大改,要整個重來(舊資料全部作廢)</a>
+<a class="t3" href="#h34" data-id="h34">4-D 網頁沒變,但我在 Claude 那邊新增了資料,想補到 Cloudflare</a>
+<a class="t2" href="#h35" data-id="h35">5. 進階</a>
+<a class="t3" href="#h36" data-id="h36">進階一:更換 Google 用戶端 ID(或密鑰)</a>
+<a class="t3" href="#h37" data-id="h37">進階二:把網址中的 &lt;你的代號&gt; 改掉(workers.dev 子網域)</a>
+<a class="t2" href="#h42" data-id="h42">6. 額度與使用提醒</a>
+<a class="t2" href="#h46" data-id="h46">7. 遇到的問題總表(對照查找)</a>
+<a class="t2" href="#h48" data-id="h48">8. 安全說明</a>
+<a class="t2" href="#h49" data-id="h49">9. 完成檢查表、怎麼求助</a></nav></details>
+<div class="layout">
+<nav class="side" aria-label="目錄"><div class="brand">Cloudflare 設定步驟(Google 登入版)— 新手詳細步驟</div><a class="t2" href="#h3" data-id="h3">快速總覽:七個步驟一頁看完</a>
+<a class="t2" href="#h4" data-id="h4">名詞小辭典(看不懂的字先查這裡)</a>
+<a class="t2" href="#h5" data-id="h5">0. 先搞懂:這套東西由哪三塊組成</a>
+<a class="t2" href="#h9" data-id="h9">1. 開始前:要準備什麼、記事表</a>
+<a class="t1" href="#h14" data-id="h14">第一次建置:步驟 1~7</a>
+<a class="t2" href="#h15" data-id="h15">步驟 1:建立資料庫(D1)</a>
+<a class="t2" href="#h16" data-id="h16">步驟 2:建立 Worker 並貼上程式</a>
+<a class="t2" href="#h17" data-id="h17">步驟 3:把資料庫綁到 Worker</a>
+<a class="t2" href="#h18" data-id="h18">步驟 4:不要開通 Zero Trust / Access(重要的轉折)</a>
+<a class="t2" href="#h19" data-id="h19">步驟 5:在 Google 建立登入用的 OAuth 用戶端</a>
+<a class="t3" href="#h20" data-id="h20">5-1 進入 Google Cloud 並建立專案</a>
+<a class="t3" href="#h21" data-id="h21">5-2 找到「OAuth 同意畫面」(Google Auth Platform)</a>
+<a class="t3" href="#h22" data-id="h22">5-3 完成 OAuth 設定</a>
+<a class="t3" href="#h23" data-id="h23">5-4 建立 OAuth 用戶端</a>
+<a class="t3" href="#h24" data-id="h24">5-5 加入測試使用者</a>
+<a class="t2" href="#h25" data-id="h25">步驟 6:在 Worker 設定變數並 Deploy</a>
+<a class="t2" href="#h26" data-id="h26">步驟 7:測試</a>
+<a class="t2" href="#h27" data-id="h27">3. 日常管理</a>
+<a class="t2" href="#h30" data-id="h30">4. 之後網頁或資料變了,要怎麼更新</a>
+<a class="t3" href="#h31" data-id="h31">4-A 只是在網頁上改內容(最常見)</a>
+<a class="t3" href="#h32" data-id="h32">4-B 網頁(功能、外觀)有變,資料不動</a>
+<a class="t3" href="#h33" data-id="h33">4-C 網頁和資料都大改,要整個重來(舊資料全部作廢)</a>
+<a class="t3" href="#h34" data-id="h34">4-D 網頁沒變,但我在 Claude 那邊新增了資料,想補到 Cloudflare</a>
+<a class="t2" href="#h35" data-id="h35">5. 進階</a>
+<a class="t3" href="#h36" data-id="h36">進階一:更換 Google 用戶端 ID(或密鑰)</a>
+<a class="t3" href="#h37" data-id="h37">進階二:把網址中的 &lt;你的代號&gt; 改掉(workers.dev 子網域)</a>
+<a class="t2" href="#h42" data-id="h42">6. 額度與使用提醒</a>
+<a class="t2" href="#h46" data-id="h46">7. 遇到的問題總表(對照查找)</a>
+<a class="t2" href="#h48" data-id="h48">8. 安全說明</a>
+<a class="t2" href="#h49" data-id="h49">9. 完成檢查表、怎麼求助</a></nav>
+<main><article><p><a id="top"></a></p>
+<h1 id="h1">Cloudflare 設定步驟(Google 登入版)— 新手詳細步驟</h1>
+<blockquote>
+<p>這份是依你實際操作過程整理的,全部做完、登入成功,所以整條流程是通的。
+標示「✅ 畫面已對過」的地方,是你當時貼的截圖確認過畫面長相;其餘按鈕名稱是我依記憶寫的,Cloudflare 與 Google 後台常改版,名稱可能略有不同,<strong>以你畫面為準</strong>。
+看不懂的名詞,先看 <a href="#a-words">名詞小辭典</a>。卡住了,看 <a href="#a-help">怎麼求助</a>。</p>
+</blockquote>
+<h2 id="h2">目錄(點一下就會跳到那一節)</h2>
+<p><strong>先看這裡</strong></p>
+<ul>
+<li><a href="#a-quick">快速總覽:七個步驟一頁看完</a></li>
+<li><a href="#a-words">名詞小辭典(看不懂的字先查這裡)</a></li>
+<li><a href="#a-parts">0. 先搞懂:這套東西由哪三塊組成</a></li>
+<li><a href="#a-prep">1. 開始前:要準備什麼、記事表</a></li>
+</ul>
+<p><strong>第一次建置</strong></p>
+<ul>
+<li><a href="#s1">步驟 1:建立資料庫(D1)</a></li>
+<li><a href="#s2">步驟 2:建立 Worker 並貼上程式</a></li>
+<li><a href="#s3">步驟 3:把資料庫綁到 Worker</a></li>
+<li><a href="#s4">步驟 4:不要開通 Zero Trust / Access</a></li>
+<li><a href="#s5">步驟 5:在 Google 建立登入用的 OAuth 用戶端</a></li>
+<li><a href="#s6">步驟 6:在 Worker 設定變數並 Deploy</a></li>
+<li><a href="#s7">步驟 7:測試</a></li>
+</ul>
+<p><strong>用起來之後</strong></p>
+<ul>
+<li><a href="#a-daily">3. 日常管理(含:怎麼邀請新成員)</a></li>
+<li><a href="#a-update">4. 之後網頁或資料變了,要怎麼更新</a><ul>
+<li><a href="#u-a">4-A 只是在網頁上改內容</a>、<a href="#u-b">4-B 網頁有變</a>、<a href="#u-c">4-C 全部重來</a>、<a href="#u-d">4-D 把 Claude 新增的資料補過來</a></li>
+</ul>
+</li>
+<li><a href="#a-adv">5. 進階:換用戶端 ID、改網址代號</a></li>
+<li><a href="#a-limits">6. 額度與使用提醒(免費夠不夠用、手機、LINE)</a></li>
+</ul>
+<p><strong>出問題時</strong></p>
+<ul>
+<li><a href="#a-trouble">7. 遇到的問題總表</a></li>
+<li><a href="#a-safe">8. 安全說明</a></li>
+<li><a href="#a-help">9. 完成檢查表、怎麼求助</a></li>
+</ul>
+<hr>
+<p><a id="a-quick"></a></p>
+<h2 id="h3">快速總覽:七個步驟一頁看完</h2>
+<p>整件事的目標:做出一個<strong>只有你指定的 Gmail 才能登入</strong>、大家<strong>可以一起編輯</strong>的行程表網站。</p>
+<p>第一次大約需要 30~60 分鐘(這是我的估計,不是實測)。你會用到兩個網站:<strong>Cloudflare</strong>(放網站和資料)與 <strong>Google Cloud</strong>(做登入)。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>在哪裡做</th>
+<th>做什麼</th>
+<th>完成的標誌</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#s1">1</a></td>
+<td>Cloudflare</td>
+<td>建一個空的資料庫</td>
+<td>D1 列表裡有 <code>africa-itinerary</code></td>
+</tr>
+<tr>
+<td><a href="#s2">2</a></td>
+<td>Cloudflare</td>
+<td>建 Worker、貼上 <code>worker.js</code>、決定網址代號</td>
+<td>打開網址看到「尚未完成設定」</td>
+</tr>
+<tr>
+<td><a href="#s3">3</a></td>
+<td>Cloudflare</td>
+<td>把資料庫綁到 Worker(名稱 <code>DB</code>)</td>
+<td>Bindings 列表出現 <code>DB</code></td>
+</tr>
+<tr>
+<td><a href="#s4">4</a></td>
+<td>—</td>
+<td><strong>不要</strong>開通 Zero Trust(跳過)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="#s5">5</a></td>
+<td>Google Cloud</td>
+<td>建登入用的 OAuth 用戶端、加測試使用者</td>
+<td>拿到「用戶端 ID」和「用戶端密鑰」</td>
+</tr>
+<tr>
+<td><a href="#s6">6</a></td>
+<td>Cloudflare</td>
+<td>把五個變數貼進 Worker 並 Deploy</td>
+<td>打開網址看到「使用 Google 登入」</td>
+</tr>
+<tr>
+<td><a href="#s7">7</a></td>
+<td>瀏覽器</td>
+<td>登入、改一格、確認同步</td>
+<td>看到行程表、右上角「已儲存」</td>
+</tr>
+</tbody></table></div>
+<p>整體怎麼運作(一張圖):</p>
+<pre><code>你的瀏覽器 ──► Cloudflare Worker(網頁 + 登入檢查)
+                    │  ▲
+   要登入時跳去 ──► Google 登入畫面
+                    │
+                    ▼
+              D1 資料庫(你的行程資料)
+</code></pre>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-words"></a></p>
+<h2 id="h4">名詞小辭典(看不懂的字先查這裡)</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>名詞</th>
+<th>白話解釋</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cloudflare</strong></td>
+<td>一家網路服務公司。我們用它的免費服務放網站和資料。</td>
+</tr>
+<tr>
+<td><strong>Worker</strong></td>
+<td>Cloudflare 上跑你這個網站程式的地方。可以想成「一個放在網路上、24 小時開著的小店」。</td>
+</tr>
+<tr>
+<td><strong><code>worker.js</code></strong></td>
+<td>那個小店的<strong>全部程式</strong>,一個檔案。網頁、登入檢查、資料存取都在裡面。</td>
+</tr>
+<tr>
+<td><strong>D1</strong></td>
+<td>Cloudflare 的資料庫,用來存你的行程內容。可以想成「小店後面的倉庫」。</td>
+</tr>
+<tr>
+<td><strong>Binding(綁定)</strong></td>
+<td>把倉庫(D1)和小店(Worker)接上線的動作。沒綁,小店找不到倉庫。</td>
+</tr>
+<tr>
+<td><strong>Deploy(部署)</strong></td>
+<td>「把你剛改的東西正式上線」的按鈕。<strong>改了程式或變數,不按 Deploy,就沒有生效。</strong></td>
+</tr>
+<tr>
+<td><strong>Variable / 變數</strong></td>
+<td>放在 Worker 設定裡的一個「名稱 + 值」,例如名稱 <code>ALLOWED</code>、值是一串 Gmail。</td>
+</tr>
+<tr>
+<td><strong>Text 與 Secret</strong></td>
+<td>變數的兩種類型。<strong>Text</strong> 設定後還看得到值;<strong>Secret</strong> 設定後<strong>再也看不到</strong>(只能覆蓋重填),用來放密鑰。</td>
+</tr>
+<tr>
+<td><strong>OAuth / Google 登入</strong></td>
+<td>讓網站借用 Google 的登入畫面,網站本身不用保管你的密碼。</td>
+</tr>
+<tr>
+<td><strong>OAuth 用戶端</strong></td>
+<td>你在 Google 那邊替「這個網站」申請的一張登記證,證上有「用戶端 ID」和「用戶端密鑰」。</td>
+</tr>
+<tr>
+<td><strong>用戶端 ID</strong></td>
+<td>登記證的編號,不算機密。</td>
+</tr>
+<tr>
+<td><strong>用戶端密鑰</strong></td>
+<td>登記證的暗號,<strong>是機密</strong>,不要貼給任何人。</td>
+</tr>
+<tr>
+<td><strong>重新導向 URI</strong></td>
+<td>登入完成後,Google 要把你送回哪個網址。<strong>必須和你的網站網址完全一樣</strong>,差一個字就會失敗。</td>
+</tr>
+<tr>
+<td><strong>測試使用者</strong></td>
+<td>Google 那邊的名單:App 還在「測試中」時,只有名單上的人能登入。</td>
+</tr>
+<tr>
+<td><strong>子網域 / <code>&lt;你的代號&gt;</code></strong></td>
+<td>網址 <code>africa-trip.&lt;你的代號&gt;.workers.dev</code> 中間那一段。是你 Cloudflare 帳號的代號,預設用 email 前綴。</td>
+</tr>
+<tr>
+<td><strong>Console(控制台)</strong></td>
+<td>D1 後台的一個輸入框,可以輸入指令查詢或修改資料。<strong>改的是正式資料,不能復原。</strong></td>
+</tr>
+<tr>
+<td><strong>SQL</strong></td>
+<td>對資料庫下指令的語言。這份文件裡的 SQL 都是我寫好的,複製貼上就好。</td>
+</tr>
+<tr>
+<td><strong>種子資料</strong></td>
+<td>預先包在 <code>worker.js</code> 裡的那份行程資料。第一次登入時自動匯入 D1,之後就沒用了。</td>
+</tr>
+<tr>
+<td><strong>無痕視窗</strong></td>
+<td>瀏覽器的「不留紀錄」視窗,測試登入時用它,可以避免舊的登入狀態干擾。</td>
+</tr>
+<tr>
+<td><strong>Cookie / 登入狀態</strong></td>
+<td>瀏覽器記住「你已經登入」的小紀錄,在這個網站可維持 30 天。</td>
+</tr>
+</tbody></table></div>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-parts"></a></p>
+<h2 id="h5">0. 先搞懂:這套東西由哪三塊組成</h2>
+<h3 id="h6">用「房子與家具」來比喻</h3>
+<ul>
+<li><strong><code>worker.js</code>(程式碼)</strong> = <strong>房子的結構與裝潢</strong>:牆壁在哪裡、有幾個房間、抽屜怎麼開。也就是「網頁長什麼樣子、有哪些功能、怎麼登入」。</li>
+<li><strong>D1(資料庫)</strong> = <strong>搬進去住之後買的家具與雜物</strong>:你的行程細節、花費金額、待辦事項、行李清單。也就是「網站裡填的內容」。</li>
+</ul>
+<p>兩者是<strong>分開處理</strong>的:</p>
+<ul>
+<li>想改裝潢(新功能、新版面)→ 換 <code>worker.js</code>,家具原封不動。</li>
+<li>想換家具(改內容)→ 直接在網頁上改,改的是 D1,房子不用動。</li>
+</ul>
+<h3 id="h7">那 D1 裡的資料是誰放進去的?(很多人會疑惑)</h3>
+<p><strong>你沒有手動放過任何東西。</strong> 流程是這樣:</p>
+<ol>
+<li>步驟 1 你建的 D1 是一個<strong>空的</strong>資料庫(沒有表格、沒有資料)。</li>
+<li>打包 <code>worker.js</code> 時,我先把你在 Claude 行程表資料庫裡<strong>當時</strong>的所有資料抄下來,<strong>一起包進 <code>worker.js</code></strong>,這份叫「<strong>種子資料</strong>」。(你的檔案是 2026-10-28 抓的:22 段行程、17 個團行程日、17 個地點、9 項預算、16 個待辦、94 項行李、1 筆設定,共 176 筆。)</li>
+<li><strong>第一次成功登入網頁的那一刻</strong>,Worker 發現資料庫是空的,就自動:建好兩張表(<code>docs</code>、<code>meta</code>)→ 把種子資料一筆一筆放進 D1 → 在 <code>meta</code> 記一個「已匯入」標記。</li>
+<li>之後再也不會匯入第二次。<strong>之後你在網頁上改的內容只存在 D1</strong>,<code>worker.js</code> 裡那份種子資料就沒用了。</li>
+</ol>
+<p>所以:</p>
+<ul>
+<li>你在 Claude 那邊的行程表,在 10-28 之後改的內容,<strong>不會</strong>自動出現在 Cloudflare。兩邊是兩份獨立的資料。</li>
+<li>換新的 <code>worker.js</code> <strong>不會</strong>覆蓋 D1 裡的資料(因為有「已匯入」標記)。</li>
+</ul>
+<h3 id="h8">哪些變更要動哪一塊</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>你想做的事</th>
+<th>動哪裡</th>
+<th>資料會不會變</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>在網頁上改行程、備註、預算、待辦、行李</td>
+<td>什麼都不用動</td>
+<td>存進 D1</td>
+</tr>
+<tr>
+<td>網頁功能或外觀大改(新分頁、新欄位)</td>
+<td>換新的 <code>worker.js</code></td>
+<td>不會被洗掉</td>
+</tr>
+<tr>
+<td>新增放資料的「集合」種類</td>
+<td>換新的 <code>worker.js</code></td>
+<td>不會被洗掉</td>
+</tr>
+<tr>
+<td>放行的人、Google 設定、密鑰</td>
+<td>改 Worker 的 Variables,再 Deploy</td>
+<td>不變</td>
+</tr>
+<tr>
+<td>資料和網頁<strong>都大改</strong>,要整個重來</td>
+<td>換 <code>worker.js</code> + 清空 D1</td>
+<td><strong>舊資料全部被取代</strong>(見 <a href="#u-c">4-C</a>)</td>
+</tr>
+<tr>
+<td>在 Claude 增加了資料,想補到 Cloudflare</td>
+<td>往 D1 補資料(見 <a href="#u-d">4-D</a>)</td>
+<td>補進去</td>
+</tr>
+</tbody></table></div>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-prep"></a></p>
+<h2 id="h9">1. 開始前:要準備什麼、記事表</h2>
+<h3 id="h10">需要準備</h3>
+<ul>
+<li>一個 Cloudflare 免費帳號、一個 Google 帳號。</li>
+<li><code>worker.js</code>(向 Claude 取得的程式檔)。</li>
+<li>要放行的人的 <strong>Gmail 完整地址</strong>(含你自己)。</li>
+<li>一串自己產生的隨機字串,當作 <code>SESSION_SECRET</code>(下面教你怎麼產生)。</li>
+<li>一台電腦(步驟用電腦操作比手機方便很多)。</li>
+<li>一個可以開 <code>worker.js</code> 的文字編輯器:Windows 用「記事本」,Mac 用「文字編輯」(要選「純文字」格式)。<strong>不要用 Word</strong>,會多出奇怪的字。</li>
+</ul>
+<h3 id="h11">怎麼產生 <code>SESSION_SECRET</code>(隨機字串)</h3>
+<p>它是用來「簽名登入狀態」的暗號,要夠長夠亂,不要用生日或常見的字。任選一種方法:</p>
+<p><strong>方法 A:用瀏覽器產生(不需要裝任何東西)</strong></p>
+<ol>
+<li>用 Chrome 打開任一個 <code>https://</code> 開頭的網頁(例如 <a href="https://www.google.com)%E3%80%82">https://www.google.com)。</a></li>
+<li>按 <strong>F12</strong>(Mac 是 Cmd+Option+J),點上方的 <strong>Console</strong>(主控台)。</li>
+<li>輸入(用打的比較不會被擋):
+<code>crypto.randomUUID() + crypto.randomUUID()</code>
+按 Enter。<blockquote>
+<p>Chrome 若提示「不要貼上不明程式碼」,是因為貼上的保護;用<strong>手打</strong>就不會被擋。</p>
+</blockquote>
+</li>
+<li>它會印出一長串像 <code>&#39;3f2b...-...-...&#39;</code> 的字,<strong>去掉前後的引號</strong>,整串複製起來,這就是 <code>SESSION_SECRET</code>(約 72 個字元,夠長了)。</li>
+</ol>
+<p><strong>方法 B:用密碼管理員</strong>
+用你常用的密碼管理員(例如 Google 密碼管理工具、1Password)的「產生密碼」功能,長度選 <strong>32 以上</strong>,含英數字。</p>
+<blockquote>
+<p>這串字<strong>只有你知道</strong>,不要貼給任何人(包括 Claude),也不要截圖。</p>
+</blockquote>
+<h3 id="h12">記事表(建議邊做邊填,存在你自己的地方)</h3>
+<p>做的過程中會產生好幾個要抄下來的東西,先列出來:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>要記下的東西</th>
+<th>在哪一步取得</th>
+<th>機密嗎</th>
+<th>你的紀錄</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cloudflare 帳號 email</td>
+<td>註冊時</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>網址代號 <code>&lt;你的代號&gt;</code></td>
+<td><a href="#s2">步驟 2</a></td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>Worker 網址(<code>https://africa-trip.&lt;代號&gt;.workers.dev</code>)</td>
+<td><a href="#s2">步驟 2</a></td>
+<td>否(但只給要用的人)</td>
+<td></td>
+</tr>
+<tr>
+<td>用戶端 ID</td>
+<td><a href="#s5">步驟 5</a></td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>用戶端密鑰</strong></td>
+<td><a href="#s5">步驟 5</a></td>
+<td><strong>是,機密</strong></td>
+<td>(存在密碼管理員,不要寫在這裡)</td>
+</tr>
+<tr>
+<td><strong><code>SESSION_SECRET</code></strong></td>
+<td>上面產生</td>
+<td><strong>是,機密</strong></td>
+<td>(存在密碼管理員,不要寫在這裡)</td>
+</tr>
+<tr>
+<td>放行的 Gmail 名單</td>
+<td>你決定</td>
+<td>否</td>
+<td></td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>機密的東西要存在密碼管理員或別人看不到的地方</strong>,不要貼在聊天室、文件或截圖裡。Secret 類型的變數貼進 Cloudflare 之後<strong>就看不到了</strong>,所以你自己要留一份。</p>
+</blockquote>
+<h3 id="h13">這套做法的兩道保護</h3>
+<ol>
+<li>Google 的「測試使用者」名單:不在名單的人,Google 登入那一步就被擋。</li>
+<li>Worker 的 <code>ALLOWED</code> 變數:不在名單的人,即使登入 Google 也進不了網站、拿不到資料(這是真正保護資料的那一道)。</li>
+</ol>
+<p>全部免費,<strong>不需要 Zero Trust、不需要綁信用卡</strong>。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<h1 id="h14">第一次建置:步驟 1~7</h1>
+<p><a id="s1"></a></p>
+<h2 id="h15">步驟 1:建立資料庫(D1)</h2>
+<ol>
+<li>Cloudflare 後台左側 → <strong>Storage &amp; Databases</strong> → <strong>D1 SQL Database</strong> → <strong>Create database</strong>。</li>
+<li>名稱填 <code>africa-itinerary</code>,建立。</li>
+<li><strong>保持空的就好</strong>,不用建表、不用匯入資料。表格和資料會在你第一次登入成功時,由程式自動建立並匯入(原理見 <a href="#a-parts">第 0 章</a>)。</li>
+</ol>
+<p><strong>✔ 完成標誌</strong>:D1 的資料庫列表裡看得到 <code>africa-itinerary</code>。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="s2"></a></p>
+<h2 id="h16">步驟 2:建立 Worker 並貼上程式</h2>
+<ol>
+<li>左側 <strong>Workers &amp; Pages</strong>,畫面上只有一顆藍色的 <strong>Create application</strong> ✅ 畫面已對過。<blockquote>
+<p>問題 1:我找不到「Create → Create Worker」。
+原因:新版後台把 Create Worker 收進 <strong>Create application</strong> 這顆按鈕裡了。</p>
+</blockquote>
+</li>
+<li>按 <strong>Create application</strong>,選 <strong>Start with Hello World!</strong>(或名稱類似的 Worker 選項)。不要選「Import a repository」或範本。</li>
+<li>名稱填 <code>africa-trip</code>(它會是網址的一部分,請避免太容易被猜到的名字),按 <strong>Deploy</strong>。</li>
+<li>部署後按 <strong>Edit code</strong>,會看到一個程式編輯器,裡面有幾行預設的範例程式。<ul>
+<li>用滑鼠點一下編輯器內,按 <strong>Ctrl+A</strong>(Mac:Cmd+A)<strong>全選</strong>,再按 <strong>Delete</strong> 刪光。</li>
+<li>用記事本打開 <code>worker.js</code>,同樣 <strong>Ctrl+A</strong> 全選、<strong>Ctrl+C</strong> 複製。</li>
+<li>回到 Cloudflare 的編輯器,<strong>Ctrl+V</strong> 貼上。</li>
+<li>按右上角的 <strong>Deploy</strong>。</li>
+</ul>
+<blockquote>
+<p>貼完請確認編輯器裡<strong>只有</strong> <code>worker.js</code> 的內容,沒有殘留舊的範例程式,也不是只貼到一半。檔案很大(約 140KB),貼上要等幾秒,卡一下是正常的。</p>
+</blockquote>
+</li>
+<li><strong>先決定網址裡的「代號」,再記下網址。</strong>
+網址長這樣:<code>https://africa-trip.&lt;你的代號&gt;.workers.dev</code>。其中 <code>africa-trip</code> 是 Worker 名稱,<code>&lt;你的代號&gt;</code> 是 Cloudflare <strong>帳號層級</strong>的 workers.dev 子網域,<strong>預設會用你註冊 email 的前綴</strong>。如果不想讓 email 出現在網址裡(之後要分享給別人,對方會看到),請<strong>在這一步先改掉</strong>,後面的 Google 設定就只要做一次:<ol>
+<li>Cloudflare 後台 → <strong>Workers &amp; Pages</strong> 總覽頁 → 找 <strong>Account details</strong> 區塊 → <strong>Subdomain</strong>(或 workers.dev subdomain)旁的 <strong>Edit / Change</strong>(畫面名稱依記憶寫的,以你的畫面為準)。</li>
+<li>改成想要的名稱:全站唯一,被用掉就換一個;建議不要用真名或 email。儲存(Cloudflare 可能警告舊網址會失效,此時還沒有人用,可放心)。</li>
+<li>改完後,Worker 概覽頁顯示的網址就是新的了。</li>
+</ol>
+<blockquote>
+<p>它會影響這個帳號下所有 Worker。如果已經做到後面才想改,見 <a href="#adv2">進階二</a>,要多做一步:更新 Google 的重新導向 URI。</p>
+</blockquote>
+</li>
+<li>記下網址:<code>https://africa-trip.&lt;新代號&gt;.workers.dev</code>(Worker 概覽頁可看到)。下面稱它為「Worker 網址」,<strong>後面所有 <code>&lt;你的代號&gt;</code> 都請換成你現在的代號</strong>。填進 <a href="#a-prep">記事表</a>。</li>
+</ol>
+<p><strong>✔ 完成標誌</strong>:用瀏覽器打開 Worker 網址,看到「尚未綁定 D1 資料庫」或「尚未完成設定…」之類的文字訊息。<strong>這是正常且刻意的</strong>:代表程式有在跑,只是還沒設定完,而且沒設定完時它不會讓任何人看到資料。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="s3"></a></p>
+<h2 id="h17">步驟 3:把資料庫綁到 Worker</h2>
+<ol>
+<li>進入 Worker → <strong>Settings</strong> → <strong>Bindings</strong> → <strong>Add</strong> → 出現 <strong>Add a binding</strong> 視窗 ✅ 畫面已對過。</li>
+<li>左側選 <strong>D1 database</strong>。<blockquote>
+<p>問題 2:我看不到 Variable name 和 Database 欄位。
+原因:那個畫面只是說明範例,欄位要按右下角 <strong>Add Binding</strong> 之後才會出現。</p>
+</blockquote>
+</li>
+<li>按 <strong>Add Binding</strong>,然後填:<ul>
+<li><strong>Variable name:<code>DB</code></strong>(大寫,不能有空格,不能改名)。</li>
+<li><strong>D1 database:</strong> 選 <code>africa-itinerary</code>。</li>
+</ul>
+</li>
+<li>儲存並 <strong>Deploy</strong>。</li>
+</ol>
+<blockquote>
+<p>如果下拉選單找不到資料庫:代表步驟 1 還沒建,先建好再回來綁。</p>
+</blockquote>
+<p><strong>✔ 完成標誌</strong>:Bindings 列表裡有一列 <code>DB</code>,指向 <code>africa-itinerary</code>。重新整理 Worker 網址,訊息變成「尚未完成設定:請在…設定 GOOGLE_CLIENT_ID…」(代表資料庫已接上,還缺登入設定)。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="s4"></a></p>
+<h2 id="h18">步驟 4:不要開通 Zero Trust / Access(重要的轉折)</h2>
+<p>最初我們打算用 Cloudflare Access 做登入。實際操作時遇到:</p>
+<blockquote>
+<p>問題 3:Worker 的 <strong>Access</strong> 分頁只出現「Set up Zero Trust for this account」✅ 畫面已對過。按下去之後,進入付款頁:Zero Trust Free、今天應付 $0、<strong>但要求輸入信用卡 / PayPal / Apple Pay / Google Pay</strong> ✅ 畫面已對過。</p>
+</blockquote>
+<p>結論:Access 即使是免費方案,也要先留付款方式。你不想留,所以<strong>改用 Google 登入</strong>。</p>
+<ul>
+<li>你<strong>不需要</strong>開通 Zero Trust,Worker 的 Access 分頁<strong>不用理它</strong>,這一步跳過。</li>
+<li>如果你已經進到付款頁,直接按左上角 <strong>Back</strong> 離開即可。</li>
+</ul>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="s5"></a></p>
+<h2 id="h19">步驟 5:在 Google 建立登入用的 OAuth 用戶端</h2>
+<p>這一步要換到 <strong>Google Cloud</strong> 網站。目的是向 Google 登記「我有一個網站,想讓人用 Google 帳號登入」,Google 會給你一組「用戶端 ID」和「用戶端密鑰」。</p>
+<h3 id="h20">5-1 進入 Google Cloud 並建立專案</h3>
+<ol>
+<li>打開 <a href="https://console.cloud.google.com/">https://console.cloud.google.com/</a> ,用 Google 帳號登入,同意條款。</li>
+<li>上方專案選單 → <strong>新增專案</strong>,名稱 <code>africa-trip</code>,建立後<strong>切換</strong>到這個專案(上方專案名稱會顯示 <code>africa-trip</code>)✅ 畫面已對過。</li>
+</ol>
+<h3 id="h21">5-2 找到「OAuth 同意畫面」(Google Auth Platform)</h3>
+<blockquote>
+<p>問題 4:找不到「APIs &amp; Services → OAuth consent screen」。
+原因:你的 Google Cloud 是中文介面,選單名稱是中文;而且新版已改名為 <strong>Google Auth Platform</strong>。</p>
+</blockquote>
+<p>三種找法,擇一:</p>
+<ul>
+<li>用最上方<strong>搜尋列</strong>輸入 <code>Google Auth Platform</code>(或 <code>OAuth 同意畫面</code>)。</li>
+<li>左上角 ≡ 選單 →「API 和服務」→「OAuth 同意畫面」(或直接點 <strong>Google Auth Platform</strong>)。</li>
+<li>網址列輸入 <code>https://console.cloud.google.com/auth/overview</code>(依記憶寫的,打不開就用前兩種)。</li>
+</ul>
+<h3 id="h22">5-3 完成 OAuth 設定</h3>
+<ol>
+<li>若畫面中間有 <strong>開始使用</strong>(Get started),按它並填寫:<ul>
+<li>應用程式名稱:<code>行程表</code>。</li>
+<li>使用者支援電子郵件:選你自己的 email。</li>
+<li>目標對象(Audience):選 <strong>外部</strong>(External)。</li>
+<li>聯絡資訊:填你的 email。同意條款,按 <strong>建立</strong>。</li>
+</ul>
+</li>
+<li>完成後畫面會跳出「<strong>OAuth 設定建立完成!</strong>」,並顯示「OAuth 總覽」,指標區寫著「尚未針對這項專案設定 OAuth 用戶端」✅ 畫面已對過。</li>
+</ol>
+<h3 id="h23">5-4 建立 OAuth 用戶端</h3>
+<ol>
+<li>按 <strong>建立 OAuth 用戶端</strong>(或左側選單 <strong>用戶端</strong> → 建立用戶端)。</li>
+<li>應用程式類型選 <strong>網頁應用程式</strong>(Web application),名稱 <code>行程表</code>。</li>
+<li><strong>已授權的重新導向 URI</strong> → <strong>新增 URI</strong>,貼上:
+<code>https://africa-trip.&lt;你的代號&gt;.workers.dev/auth/callback</code><ul>
+<li>前面一定要與 Worker 網址<strong>完全一致</strong>(把 <code>&lt;你的代號&gt;</code> 換成你真正的代號),後面接 <code>/auth/callback</code>,不要有空格、不要有結尾斜線。</li>
+<li>這是最常出錯的地方,貼完請放大檢查一次。</li>
+</ul>
+</li>
+<li>按 <strong>建立</strong>。完成後用戶端列表會出現「行程表」,類型「網頁應用程式」✅ 畫面已對過。</li>
+<li>視窗會顯示 <strong>用戶端 ID</strong> 和 <strong>用戶端密鑰</strong>,<strong>兩個都複製存好</strong>(存到密碼管理員)。密鑰關掉視窗後可能看不到;忘了複製就進入「行程表」用戶端頁,新增一組新的密鑰即可。<ul>
+<li><strong>用戶端密鑰是機密,不要貼給任何人</strong>(包括 Claude)。</li>
+</ul>
+</li>
+</ol>
+<h3 id="h24">5-5 加入測試使用者</h3>
+<blockquote>
+<p>問題 5:找不到「加測試使用者」。
+原因:它不在「用戶端」頁,而是在左側選單的 <strong>目標對象</strong>(Audience)頁。</p>
+</blockquote>
+<ol>
+<li>左側選單點 <strong>目標對象</strong>:點 Google Auth Platform 標題旁盾牌圖示的小箭頭(▾)或左上角 ≡ 可打開選單。直接網址 <code>https://console.cloud.google.com/auth/audience</code> 是依記憶寫的,未確認。</li>
+<li><strong>發佈狀態</strong>請維持 <strong>測試中</strong>(Testing),<strong>不要按發佈</strong>。</li>
+<li><strong>測試使用者</strong> 區塊按 <strong>新增使用者</strong>(Add users),輸入要放行的 Gmail,每行一個,<strong>一定要包含你自己</strong>,儲存。</li>
+<li>測試中的 App 登入時,Google 可能出現「尚未驗證這個應用程式」的警告 → 點 <strong>進階</strong> → <strong>繼續前往</strong>。因為只有你們自己用,不需要送 Google 審核。</li>
+</ol>
+<p><strong>✔ 完成標誌</strong>:你手上有「用戶端 ID」和「用戶端密鑰」(已存好),且「目標對象」頁的測試使用者名單裡有你自己的 Gmail,發佈狀態是「測試中」。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="s6"></a></p>
+<h2 id="h25">步驟 6:在 Worker 設定變數並 Deploy</h2>
+<p>回到 <strong>Cloudflare</strong>。Worker → <strong>Settings</strong> → <strong>Variables and Secrets</strong> → <strong>Add</strong>。依序新增(<strong>每次新增或修改後都要 Deploy</strong>):</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>名稱(全大寫,不可改)</th>
+<th>類型</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GOOGLE_CLIENT_ID</code></td>
+<td>Text</td>
+<td>步驟 5-4 的用戶端 ID</td>
+</tr>
+<tr>
+<td><code>GOOGLE_CLIENT_SECRET</code></td>
+<td><strong>Secret</strong></td>
+<td>步驟 5-4 的用戶端密鑰</td>
+</tr>
+<tr>
+<td><code>SESSION_SECRET</code></td>
+<td><strong>Secret</strong></td>
+<td>你產生的隨機字串(見 <a href="#a-prep">準備</a>)</td>
+</tr>
+<tr>
+<td><code>ALLOWED</code></td>
+<td>Text</td>
+<td>放行的 Gmail,用逗號隔開,例如 <code>你的@gmail.com, 旅伴@gmail.com</code>(<strong>一定要包含你自己</strong>)</td>
+</tr>
+<tr>
+<td><code>VIEWERS</code></td>
+<td>Text(選用)</td>
+<td>「只能看、不能改」的人的 Gmail。要先在 <code>ALLOWED</code> 內,再列在這裡</td>
+</tr>
+</tbody></table></div>
+<p><code>ALLOWED</code> 的格式:多個 Gmail 之間可用逗號、分號、空白或換行隔開;大小寫不拘;不要有多餘的引號或錯字。</p>
+<p><strong>新手常犯的錯:</strong></p>
+<ul>
+<li>變數名稱打錯(例如 <code>GOOGLE_CLIENTID</code>、小寫、多一個空格)。<strong>名稱必須和表格一模一樣。</strong></li>
+<li>把密鑰類選成 Text,或把一般文字選成 Secret。照上表選就對了。</li>
+<li>設定完忘了按 <strong>Deploy</strong>。</li>
+<li>貼上的值前後多了空格或引號。</li>
+</ul>
+<p><strong>✔ 完成標誌</strong>:用瀏覽器打開 Worker 網址,看到「行程表登入」畫面和 <strong>使用 Google 登入</strong> 按鈕。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="s7"></a></p>
+<h2 id="h26">步驟 7:測試</h2>
+<ol>
+<li>用<strong>無痕視窗</strong>打開 Worker 網址 → 看到「行程表登入」與 <strong>使用 Google 登入</strong> 按鈕。</li>
+<li>登入名單內的 Gmail → 進入行程表,資料已自動匯入(原理見 <a href="#a-parts">第 0 章</a>)。</li>
+<li>改一格內容、離開輸入框,右上角出現「已儲存」。</li>
+<li>另一個名單內的帳號(或另一個瀏覽器)登入,約 6 秒內會看到你的修改。</li>
+<li>用不在名單的 Google 帳號登入,應顯示「這個 Google 帳號不在允許名單內」。</li>
+<li>設為唯讀的帳號(<code>VIEWERS</code>)登入後,右上角顯示「唯讀」,不能修改。</li>
+<li>(選做)確認資料真的進了 D1:Cloudflare → <strong>Storage &amp; Databases</strong> → <strong>D1 SQL Database</strong> → <code>africa-itinerary</code> → <strong>Console</strong>,執行(只讀,不會改任何東西):<pre><code class="language-sql">SELECT coll, COUNT(*) FROM docs GROUP BY coll;
+</code></pre>
+預期:legs 22、days 17、places 17、bud 9、todo 16、pack 94、settings 1(共 176 筆)。後台分頁名稱依記憶寫的,找不到就截圖問 Claude。</li>
+</ol>
+<p><strong>✔ 完成標誌</strong>:第 1~3 點成功就是<strong>建置完成</strong>了。其他是進階檢查。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-daily"></a></p>
+<h2 id="h27">3. 日常管理</h2>
+<ul>
+<li><strong>登出</strong>:在 Worker 網址後加 <code>/logout</code>。登入一次可維持 30 天。<strong>在公用電腦用完請務必登出。</strong></li>
+<li><strong>讓所有人立刻登出</strong>:更換 <code>SESSION_SECRET</code> 的值,Deploy。</li>
+<li><strong>備份</strong>:網頁右上角可匯出 Excel / CSV,定期匯出一份。<strong>換程式或清資料庫之前一定先匯出。</strong></li>
+<li>資料以 Cloudflare 這邊為準;原本在 Claude 的行程表不會自動同步(原因見 <a href="#a-parts">第 0 章</a>)。</li>
+</ul>
+<h3 id="h28">怎麼邀請新成員(兩個地方都要加)</h3>
+<p>要讓一個新的人加入,<strong>兩個地方都要加他的 Gmail</strong>,缺一個都進不來:</p>
+<ol>
+<li><strong>Google 的測試使用者</strong>:Google Cloud → Google Auth Platform → <strong>目標對象</strong> → 測試使用者 → 新增使用者。</li>
+<li><strong>Cloudflare 的 <code>ALLOWED</code></strong>:Worker → Settings → Variables and Secrets → <code>ALLOWED</code> → 在後面加上 <code>, 他的@gmail.com</code> → <strong>Deploy</strong>。<ul>
+<li>只能看不能改的人,還要把他的 Gmail 加進 <code>VIEWERS</code>。</li>
+</ul>
+</li>
+</ol>
+<p>加完後傳給他:</p>
+<ol>
+<li>Worker 網址(用<strong>手機或電腦的 Chrome / Safari 打開</strong>,不要在 LINE 裡直接點,見 <a href="#a-limits">第 6 章</a>)。</li>
+<li>告訴他:「按『使用 Google 登入』,選你的 Gmail。如果看到『尚未驗證這個應用程式』,點<strong>進階</strong> → <strong>繼續前往</strong>。」</li>
+</ol>
+<h3 id="h29">怎麼移除人</h3>
+<p>把他的 Gmail 從 <code>ALLOWED</code>(和 <code>VIEWERS</code>)刪掉 → <strong>Deploy</strong>。<strong>立刻失效</strong>,他已登入的狀態也會斷。順手也從 Google 的測試使用者名單移除。</p>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-update"></a></p>
+<h2 id="h30">4. 之後網頁或資料變了,要怎麼更新</h2>
+<blockquote>
+<p>先記住比喻:<strong>房子(<code>worker.js</code>)和家具(D1)分開處理。</strong> 先判斷你變動的是哪一塊(對照表在 <a href="#a-parts">第 0 章</a>)。</p>
+</blockquote>
+<p><a id="u-a"></a></p>
+<h3 id="h31">4-A 只是在網頁上改內容(最常見)</h3>
+<p>直接在網頁上改,離開輸入框就存進 D1。<strong>不用動 <code>worker.js</code>,也不用動資料庫。</strong>
+(別去改 <code>worker.js</code> 裡的資料,那份種子資料第一次匯入後已經沒用了,改了不會有任何效果。)</p>
+<p><a id="u-b"></a></p>
+<h3 id="h32">4-B 網頁(功能、外觀)有變,資料不動</h3>
+<p>要換新的 <code>worker.js</code>,資料庫原封不動。</p>
+<ol>
+<li>在 Claude 對話跟 Claude 說要改什麼。網頁畫面是壓縮後包在 <code>worker.js</code> 裡的,<strong>不是人能手改的</strong>,請 Claude 重新打包一份。</li>
+<li>先在網頁右上角匯出 Excel 備份,並把<strong>舊的 <code>worker.js</code> 存起來</strong>(新版有問題時可貼回去還原)。</li>
+<li>Cloudflare → Workers &amp; Pages → 你的 Worker → <strong>Edit code</strong> → <strong>全選刪除</strong> → 貼上新的 <code>worker.js</code> → <strong>Deploy</strong>(貼法同 <a href="#s2">步驟 2</a> 第 4 點)。</li>
+<li>開網址、重新整理(必要時 Ctrl+F5),確認新功能出現、舊資料都還在。</li>
+</ol>
+<p><strong>資料不會被洗掉</strong>:因為 <code>meta</code> 裡已經有「已匯入」標記,新程式不會再匯入種子資料。</p>
+<p><a id="u-c"></a></p>
+<h3 id="h33">4-C 網頁和資料都大改,要整個重來(舊資料全部作廢)</h3>
+<p><strong>這會刪掉 D1 裡目前所有內容</strong>,包括大家在網頁上改過的東西。做之前:</p>
+<ol>
+<li><strong>先匯出 Excel 備份</strong>,並通知其他人<strong>暫停編輯</strong>。</li>
+<li>請 Claude 產生<strong>新的 <code>worker.js</code></strong>(網頁新版 + <strong>新的種子資料</strong>)。Claude 會從你在 Claude 裡的行程表資料庫取得最新資料,所以<strong>要重來的資料請先整理好在 Claude 那邊</strong>。</li>
+<li>到 D1 的 <strong>Console</strong>,執行下面兩行,清空資料(兩行都要):<pre><code class="language-sql">DELETE FROM docs;
+DELETE FROM meta;
+</code></pre>
+</li>
+<li><strong>立刻</strong>到 Worker → <strong>Edit code</strong>,貼上新的 <code>worker.js</code> → <strong>Deploy</strong>。</li>
+<li>用被放行的帳號打開網址登入 → 程式發現資料庫是空的,<strong>自動匯入新的種子資料</strong>。</li>
+<li>回 D1 Console 執行下面這行,確認筆數和你預期的一樣:<pre><code class="language-sql">SELECT coll, COUNT(*) FROM docs GROUP BY coll;
+</code></pre>
+</li>
+</ol>
+<blockquote>
+<p><strong>順序很重要:先清空(第 3 步),再換程式(第 4 步)。</strong>
+原因:正在運作的舊版程式在記憶體裡記得「已經建好資料庫」,清空後它<strong>不會自己重新匯入</strong>,畫面會空白;要靠 Deploy 新版本,新版本才會重新檢查並匯入。所以第 3、4 步請連續做完,中間不要讓人編輯。
+如果你是先換程式、後清空:換程式之後,新版會看到資料還在,不會匯入新資料;清空之後,畫面也會空白直到下次 Deploy。結果一樣麻煩,所以請照上面的順序。</p>
+</blockquote>
+<p>(只換網頁、不想動資料,看 <a href="#u-b">4-B</a>;只想補一些資料進去,看 <a href="#u-d">4-D</a>。)</p>
+<p><a id="u-d"></a></p>
+<h3 id="h34">4-D 網頁沒變,但我在 Claude 那邊新增了資料,想補到 Cloudflare</h3>
+<p>資料庫不會自動同步,補進去有兩種做法:</p>
+<p><strong>做法 1:手動在 Cloudflare 的網頁重新輸入(資料少、最簡單)</strong>
+新增的列不多就直接用 Cloudflare 的網頁加上去,不會有任何風險。</p>
+<p><strong>做法 2:請 Claude 幫你產生「補資料的 SQL」,你貼到 D1 Console 執行(資料多)</strong></p>
+<ol>
+<li>跟 Claude 說:「我在 Claude 的行程表新增了資料,請幫我產生補進 Cloudflare 的 SQL。」</li>
+<li>Claude 會拿目前 Claude 資料庫的內容,和 2026-10-28 抓的那份種子資料比對,找出<strong>新增、修改、刪除</strong>的列,產生 SQL 給你。</li>
+<li>先匯出 Excel 備份。到 D1 <strong>Console</strong> 貼上執行(後台 Console 對單次貼上的長度可能有限制,太長 Claude 會拆成幾段)。</li>
+<li>重新整理 Cloudflare 的網頁,確認資料出現。</li>
+</ol>
+<p>兩個注意點:</p>
+<ul>
+<li><strong>預設只補「新增的列」</strong>(用「已經有就跳過」的寫法),不會蓋掉大家在 Cloudflare 上已經改過的內容。要連「修改過的列」一起覆蓋,要告訴 Claude,並先確認 Cloudflare 那邊沒有人改過同一列,否則 Cloudflare 的修改會被蓋掉。</li>
+<li>Claude <strong>看不到</strong> Cloudflare 資料庫裡現在是什麼,所以它只能比對「Claude 這邊的變動」。如果兩邊都改過同一列,請你告訴 Claude 要以哪邊為準。</li>
+</ul>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-adv"></a></p>
+<h2 id="h35">5. 進階</h2>
+<p><a id="adv1"></a></p>
+<h3 id="h36">進階一:更換 Google 用戶端 ID(或密鑰)</h3>
+<blockquote>
+<p>問題 6:想把用戶端 ID 換掉。
+說明:用戶端 ID 是 Google 自動產生的,<strong>不能自己指定或修改</strong>;在用戶端頁面只能改「顯示名稱」。想換 ID,只能建一個新的用戶端,再換掉舊的。</p>
+</blockquote>
+<ol>
+<li>Google Auth Platform → <strong>用戶端</strong> → <strong>建立 OAuth 用戶端</strong>,類型選 <strong>網頁應用程式</strong>。</li>
+<li>重新導向 URI 填一樣的:<code>https://africa-trip.&lt;你的代號&gt;.workers.dev/auth/callback</code>。</li>
+<li>建立後取得新的<strong>用戶端 ID</strong> 和<strong>用戶端密鑰</strong>,兩個都存好。</li>
+<li>Cloudflare Worker → Settings → Variables and Secrets,把 <code>GOOGLE_CLIENT_ID</code> 與 <code>GOOGLE_CLIENT_SECRET</code> <strong>兩個一起</strong>換成新的值(新舊不能混用),按 <strong>Deploy</strong>。</li>
+<li>用無痕視窗登入測試,確認新的可以用。</li>
+<li>確認沒問題後,回 Google 把<strong>舊的用戶端刪除</strong>,舊 ID 與密鑰就完全失效。</li>
+</ol>
+<p>只是擔心<strong>密鑰</strong>外洩:不用換 ID,在同一個用戶端新增一組密鑰 → 更新 <code>GOOGLE_CLIENT_SECRET</code> → 刪掉舊密鑰即可。</p>
+<blockquote>
+<p>用戶端 ID 本身不算機密(它會出現在登入時的網址裡);要保密的是用戶端密鑰和 <code>SESSION_SECRET</code>。</p>
+</blockquote>
+<p><a id="adv2"></a></p>
+<h3 id="h37">進階二:把網址中的 <code>&lt;你的代號&gt;</code> 改掉(workers.dev 子網域)</h3>
+<blockquote>
+<p>問題 7:網址 <code>https://africa-trip.&lt;你的代號&gt;.workers.dev</code> 裡的「代號」預設用了我的 email 前綴,不想讓它出現在網址裡。
+說明:這個代號是 Cloudflare <strong>帳號層級</strong>的 workers.dev 子網域,可以改,但會影響這個帳號下<strong>所有</strong> Worker。<strong>最好在步驟 2 就先改</strong>(見 <a href="#s2">步驟 2</a> 第 5 點);已經做到後面才改的話,看這裡。</p>
+</blockquote>
+<h4 id="h38">改子網域</h4>
+<p>(畫面名稱是依記憶寫的,以你的畫面為準)</p>
+<ol>
+<li>Cloudflare 後台 → <strong>Workers &amp; Pages</strong> 總覽頁。</li>
+<li>找 <strong>Account details</strong> 區塊,裡面有 <strong>Subdomain</strong>(或 workers.dev subdomain),旁邊有 <strong>Edit / Change</strong>。</li>
+<li>改成想要的名稱。必須在 Cloudflare 全站唯一,被用掉就換一個;<strong>建議不要用真名或 email</strong>。</li>
+<li>儲存。Cloudflare 可能會警告舊網址將失效。</li>
+</ol>
+<h4 id="h39">改完一定要做的事</h4>
+<ol>
+<li>新網址:<code>https://africa-trip.&lt;新名稱&gt;.workers.dev</code>。</li>
+<li>Google 用戶端 → 點「行程表」→ 把<strong>已授權的重新導向 URI</strong> 改成
+<code>https://africa-trip.&lt;新名稱&gt;.workers.dev/auth/callback</code>(舊的可刪)。
+<strong>沒做這步,登入會出現 <code>redirect_uri_mismatch</code>。</strong></li>
+<li>用無痕視窗打開新網址,測試登入。</li>
+<li>把新網址告訴要使用的人。</li>
+</ol>
+<h4 id="h40">改動的影響</h4>
+<ul>
+<li><strong>舊網址立刻失效</strong>。</li>
+<li>所有人要<strong>重新登入一次</strong>(登入狀態綁在網址上)。</li>
+<li><code>ALLOWED</code>、<code>SESSION_SECRET</code>、資料庫都<strong>不用動</strong>,資料不會消失。</li>
+</ul>
+<h4 id="h41">其他選擇</h4>
+<ul>
+<li><strong>自訂網址</strong>(例如 <code>trip.你的網域.com</code>):要買網域,一年約 US$10 起,再綁到 Worker。不想花錢就用上面改子網域的做法。</li>
+<li><strong>Worker 名稱</strong> <code>africa-trip</code> 也想換:我不確定能不能直接改名,通常是新建一個 Worker、貼上程式、重新綁 D1 與設定變數。只想把 email 從網址拿掉的話,改子網域就夠,不用動 Worker 名稱。</li>
+</ul>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-limits"></a></p>
+<h2 id="h42">6. 額度與使用提醒</h2>
+<h3 id="h43">免費額度夠不夠用?</h3>
+<ul>
+<li>你的 Workers 總覽頁顯示「Requests today 0 / 100,000」✅ 畫面已對過,也就是<strong>免費版每天約 10 萬次請求</strong>。</li>
+<li>這個網站每次開頁面、每次存檔、以及<strong>網頁開著且在前景時每 6 秒的「有沒有新資料」檢查</strong>,都算請求。</li>
+<li>粗估(我的估算,不是實測):一個分頁開著且停在前景,<strong>1 小時約 600 次</strong>。5 個人各開 8 小時,約 2 萬多次,遠低於 10 萬。<strong>背景分頁不會檢查</strong>,所以放著不看不會一直消耗。</li>
+<li>如果有一天超過額度,Worker 會暫時無法使用,隔天重置(這是我印象中的行為,以 Cloudflare 說明為準)。真的遇到,請 Claude 把檢查間隔拉長。</li>
+<li>D1 資料庫也有免費額度(我記得每天可讀數百萬列),這個用量遠遠用不到。要看實際用量,到後台的 Metrics 頁。</li>
+</ul>
+<h3 id="h44">用手機或 LINE 開的時候</h3>
+<ul>
+<li><strong>手機可以用</strong>,版面會自動變成手機版。</li>
+<li><strong>不要在 LINE、Facebook、Instagram 的內建瀏覽器裡直接登入</strong>。Google 通常不允許在 App 內建瀏覽器完成登入,會顯示「不符合 Google 的安全瀏覽器政策」之類的錯誤(這是我對 Google 政策的印象,沒有在你的環境實測)。</li>
+<li>解法:在 LINE 點網址後,按右上角「…」→ <strong>用其他瀏覽器開啟</strong>(或「用 Chrome / Safari 開啟」),再登入。</li>
+<li>手機登入後也可以把網站「加到主畫面」,以後像 App 一樣點開。</li>
+</ul>
+<h3 id="h45">其他使用提醒</h3>
+<ul>
+<li><strong>改完一格要離開輸入框</strong>(點別處),右上角看到「已儲存」才算存好。</li>
+<li><strong>兩個人同時改同一格</strong>,後存的會蓋掉先存的;約 6 秒後大家的畫面會同步成最新版。</li>
+<li>資料會一直累積在 D1,沒有自動備份,<strong>要定期匯出 Excel</strong>。</li>
+</ul>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-trouble"></a></p>
+<h2 id="h46">7. 遇到的問題總表(對照查找)</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>狀況</th>
+<th>原因</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>找不到 Create → Create Worker</td>
+<td>新版後台改成單一按鈕</td>
+<td>按 <strong>Create application</strong>,選 Hello World 的 Worker 選項</td>
+</tr>
+<tr>
+<td>Add a binding 畫面沒有欄位</td>
+<td>那是說明範例畫面</td>
+<td>按 <strong>Add Binding</strong>,再填 Variable name 與 Database</td>
+</tr>
+<tr>
+<td>Access 分頁顯示 Set up Zero Trust,按下去要付款方式</td>
+<td>Access 需先開通 Zero Trust,並要求付款方式</td>
+<td>不開通,改用 Google 登入(本文做法)</td>
+</tr>
+<tr>
+<td>找不到 OAuth consent screen</td>
+<td>Google Cloud 是中文介面,且已改名</td>
+<td>用搜尋列搜 <strong>Google Auth Platform</strong></td>
+</tr>
+<tr>
+<td>找不到加測試使用者</td>
+<td>在「目標對象」頁,不在「用戶端」頁</td>
+<td>左側選單 → <strong>目標對象</strong> → 測試使用者 → 新增使用者</td>
+</tr>
+<tr>
+<td>開網址顯示「尚未綁定 D1 資料庫(變數名稱要叫 DB)」</td>
+<td>步驟 3 還沒做,或名稱不是 <code>DB</code></td>
+<td>回 <a href="#s3">步驟 3</a>,確認 Variable name 是大寫 <code>DB</code>,並 Deploy</td>
+</tr>
+<tr>
+<td>開網址顯示「尚未完成設定…」</td>
+<td>缺少必要變數</td>
+<td>確認 <code>GOOGLE_CLIENT_ID</code>、<code>GOOGLE_CLIENT_SECRET</code>、<code>SESSION_SECRET</code>、<code>ALLOWED</code> 都已新增並 Deploy</td>
+</tr>
+<tr>
+<td>登入時顯示「這個 Google 帳號不在允許名單內」</td>
+<td>Worker 認為這個 Gmail 不在 <code>ALLOWED</code></td>
+<td>見下方清單</td>
+</tr>
+<tr>
+<td>登入時顯示「登入逾時或不完整」</td>
+<td>登入中途停太久,或用了不同瀏覽器 / 分頁</td>
+<td>重新按「使用 Google 登入」,在同一個視窗完成</td>
+</tr>
+<tr>
+<td>登入時顯示「Google 登入失敗」</td>
+<td>用戶端 ID / 密鑰填錯,或重新導向 URI 對不上</td>
+<td>檢查步驟 5-4、步驟 6 的值,並 Deploy</td>
+</tr>
+<tr>
+<td>Google 顯示 redirect_uri_mismatch</td>
+<td>Google 的重新導向 URI 與 Worker 網址不一致</td>
+<td>回 Google 用戶端頁修正 URI(需完全一致,且結尾是 <code>/auth/callback</code>)</td>
+</tr>
+<tr>
+<td>Google 顯示尚未驗證 / 存取被拒</td>
+<td>App 在測試中,該帳號不在測試使用者名單</td>
+<td>到「目標對象」把該 Gmail 加進測試使用者;若只是「尚未驗證」警告,點進階 → 繼續前往</td>
+</tr>
+<tr>
+<td>在 LINE 裡點開無法登入</td>
+<td>Google 不允許內建瀏覽器登入</td>
+<td>改用 Chrome / Safari 開啟(見 <a href="#a-limits">第 6 章</a>)</td>
+</tr>
+<tr>
+<td>登入後畫面是空白,沒有資料</td>
+<td>D1 剛清空後還沒重新匯入,或資料庫沒綁好</td>
+<td>見 <a href="#u-c">4-C</a>;清空後要 Deploy 新版本才會重新匯入</td>
+</tr>
+<tr>
+<td>想換用戶端 ID</td>
+<td>ID 由 Google 產生,不能自訂或修改</td>
+<td>建新用戶端,換 Cloudflare 兩個變數,刪舊的(見 <a href="#adv1">進階一</a>)</td>
+</tr>
+<tr>
+<td>網址裡的代號是我的 email 前綴</td>
+<td>workers.dev 子網域預設用 email 前綴</td>
+<td>步驟 2 先改;之後才改要更新 Google 的重新導向 URI(見 <a href="#adv2">進階二</a>)</td>
+</tr>
+<tr>
+<td>我沒有放過資料進 D1,資料哪來的?</td>
+<td>資料包在 <code>worker.js</code> 裡,第一次登入時自動匯入</td>
+<td>見 <a href="#a-parts">第 0 章</a>;用步驟 7 第 7 點的查詢確認</td>
+</tr>
+</tbody></table></div>
+<h3 id="h47">「這個 Google 帳號不在允許名單內」的檢查清單</h3>
+<p>出現這個訊息,代表 <strong>Google 登入與 Worker 都已正常運作</strong>,只是名單比對不通過。逐項檢查:</p>
+<ol>
+<li>改了 <code>ALLOWED</code> 之後<strong>有沒有按 Deploy</strong>(沒 Deploy 變數不會生效)。</li>
+<li>名單裡的 Gmail 是不是<strong>這個 Google 帳號登入時用的完整地址</strong>(有些帳號用別的信箱註冊,或名單寫成別名)。</li>
+<li>有沒有<strong>錯字</strong>、多餘引號,或變數名稱不是 <code>ALLOWED</code>。</li>
+<li>想讓某人「只能看」:他的 Gmail 要<strong>同時</strong>在 <code>ALLOWED</code> 和 <code>VIEWERS</code>。</li>
+</ol>
+<blockquote>
+<p>當時你問題的實際解法我沒有紀錄,上面是依常見原因整理的清單。</p>
+</blockquote>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-safe"></a></p>
+<h2 id="h48">8. 安全說明</h2>
+<ul>
+<li>沒登入或不在名單的人,Worker 在伺服器端就拒絕,拿不到網頁與資料。</li>
+<li>被放行的人在瀏覽器中仍看得到網頁程式碼(網頁的本質),已壓縮混淆,只擋得住隨手複製。</li>
+<li>被放行的人都能看到並修改全部資料(除非列入 <code>VIEWERS</code>)。</li>
+<li>護照號碼、訂位代號等敏感資料不要放進去。</li>
+<li><strong>用戶端密鑰與 <code>SESSION_SECRET</code> 是機密</strong>:不要貼在聊天、文件或截圖中。若不慎外洩,在 Google 用戶端頁重新產生密鑰、並更換 <code>SESSION_SECRET</code>。</li>
+<li>與 Cloudflare Access 相比,少了企業級管理功能(裝置檢查、登入紀錄),個人旅遊用途足夠。</li>
+<li>D1 Console 執行的是<strong>正式資料庫</strong>,不能復原;<code>DELETE</code> 之類的指令執行前務必先匯出備份。</li>
+</ul>
+<p><a href="#top">回到目錄</a></p>
+<hr>
+<p><a id="a-help"></a></p>
+<h2 id="h49">9. 完成檢查表、怎麼求助</h2>
+<h3 id="h50">全部做完後,逐項打勾</h3>
+<ul>
+<li><input type="checkbox"> D1 裡有 <code>africa-itinerary</code>,Worker 綁定了 <code>DB</code></li>
+<li><input type="checkbox"> Worker 網址的代號已改成不含 email(或你接受現狀)</li>
+<li><input type="checkbox"> Google 用戶端的重新導向 URI 和 Worker 網址<strong>完全一致</strong></li>
+<li><input type="checkbox"> 「目標對象」發佈狀態是<strong>測試中</strong>,測試使用者名單有你和旅伴</li>
+<li><input type="checkbox"> Worker 有 <code>GOOGLE_CLIENT_ID</code>、<code>GOOGLE_CLIENT_SECRET</code>、<code>SESSION_SECRET</code>、<code>ALLOWED</code>,並已 Deploy</li>
+<li><input type="checkbox"> 無痕視窗能用 Google 登入、看到行程表、改一格能存</li>
+<li><input type="checkbox"> 名單外的 Gmail 被擋下</li>
+<li><input type="checkbox"> 用戶端密鑰與 <code>SESSION_SECRET</code> 已存在密碼管理員</li>
+<li><input type="checkbox"> 已匯出過一次 Excel 備份,並存好 <code>worker.js</code></li>
+</ul>
+<h3 id="h51">卡住時怎麼求助(給 Claude 看)</h3>
+<p>為了讓問題一次解決,請提供:</p>
+<ol>
+<li><strong>你做到哪一步</strong>(例如「步驟 5-4,建立用戶端」)。</li>
+<li><strong>你看到的畫面</strong>:截一張圖貼給我。</li>
+<li><strong>你看到的錯誤文字</strong>,原文複製。</li>
+<li><strong>你做了什麼</strong>(例如「我剛改了 ALLOWED,有按 Deploy」)。</li>
+</ol>
+<p><strong>截圖前請檢查</strong>:不要讓畫面裡出現<strong>用戶端密鑰</strong>、<strong><code>SESSION_SECRET</code></strong> 或別人的 email。如果畫面上有,先用小畫家或截圖工具把它塗掉再貼。</p>
+<p>我(Claude)沒辦法直接看你的 Cloudflare 或 Google 後台,所以後台按鈕名稱和畫面,<strong>都要靠你的截圖我才能確認</strong>。</p>
+<p><a href="#top">回到目錄</a></p>
+</article></main>
+</div>
+<a class="top" href="#top">↑ 回頁首</a>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav.side a'));
+  var map={};links.forEach(function(a){map[a.dataset.id]=a;});
+  var heads=links.map(function(a){return document.getElementById(a.dataset.id);}).filter(Boolean);
+  function setOn(id){links.forEach(function(a){a.classList.toggle('on',a.dataset.id===id);});var a=map[id];if(a&&a.scrollIntoView){var nav=a.parentNode;if(nav.scrollHeight>nav.clientHeight){var r=a.getBoundingClientRect(),nr=nav.getBoundingClientRect();if(r.top<nr.top+40||r.bottom>nr.bottom-40)nav.scrollTop+=r.top-nr.top-nr.height/3;}}}
+  function onScroll(){var cur=null,y=window.innerHeight*0.25;heads.forEach(function(h){if(h.getBoundingClientRect().top<=y)cur=h;});if(cur)setOn(cur.id);}
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  document.querySelectorAll('details.mtoc a').forEach(function(a){a.addEventListener('click',function(){document.querySelector('details.mtoc').open=false;});});
+  document.querySelectorAll('pre').forEach(function(p){var b=document.createElement('button');b.className='cp';b.type='button';b.textContent='複製';
+    b.addEventListener('click',function(){var t=p.querySelector('code').innerText;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='已複製';},function(){var r=document.createRange();r.selectNodeContents(p.querySelector('code'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='已選取,請按 Ctrl+C';});setTimeout(function(){b.textContent='複製';},1800);});p.appendChild(b);});
+  document.querySelectorAll('p').forEach(function(p){if(/^\s*✔/.test(p.textContent))p.classList.add('ok');});
+  var KEY='cf-guide-checks',st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
+  document.querySelectorAll('input[type=checkbox]').forEach(function(c,i){c.disabled=false;if(st[i])c.checked=true;c.addEventListener('change',function(){st[i]=c.checked;try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}});});
+  document.querySelector('a.top').addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0});});
+  if(location.hash){var t=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(t)setTimeout(function(){t.scrollIntoView();},50);}
+})();
+</script></body></html>
